@@ -1,0 +1,44 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+! Timoshenko beam test
+!
+! The idea is to use the properties derived from a 3D model, and implement them
+! in a Timoshenko beam. Then the Timoshenko beam is subjected to some load case
+! and the response is recorded. By doing this, it is possible to evaluate the 
+! effectiveness of the Timoshenko beam at capturing the deformation behaviour of
+! a real fiber. 
+!
+! N.B. This is a simple experimental zone and is used to figure out which parts 
+! need to be in the model and how to import the necessary constants.
+!
+!
+! Implemented functionality:
+! - Create basic model structure:
+! 		- Definition
+! 		- Load case
+! 		- Solution
+! 		- Post processing 
+!
+!
+! Author : August Brandberg
+! Created: 14-12-2017
+!
+! TO DO:
+!
+! - Create an import function so that the output from the 3D model can be 
+!   seamlessly applied to this model:
+! 		- Cross sectional shape (tapered)
+! 
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! ********** Meta instructions
+fini
+/cle
+
+! ********** Parameters
+/prep7
+
+
+
+

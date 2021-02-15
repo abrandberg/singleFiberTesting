@@ -1,0 +1,112 @@
+
+numDivs = 20										! Discretization of beam
+tsteps = 20*2
+
+/prep7
+
+! ********** Material data
+mptemp,   1,0  
+mpdata,dens,1,,1e-18
+mpdata,  ex,1,,EZ
+mpdata,prxy,1,,0!0.25
+
+! ********** Elements
+et,1,189
+!keyopt,1,1,1
+
+! ********** Geometry construction
+/input,test44,txt
+allsel
+LESIZE, all, 10
+lmesh,all
+
+
+! ********** Boundary conditions 
+nsel,s,loc,y,0
+d,all,all,0
+
+allsel
+*get,miny,node,,mnloc,y
+
+nsel,s,loc,y,miny
+d,all,all,0
+d,all,uy,-10
+
+
+! ********** Solution options
+/solu
+nlgeom,off!on
+!eqsl,sparse
+
+
+lnsrch,on
+autots,on
+neqit,50
+nsubst,tsteps,tsteps*2000,tsteps
+outres,all,all
+time,1
+allsel
+solve
+/ESHAPE,1.0 
+
+! ********** Post processing
+/post1
+PLNSOL, U,Y, 0,1.0  
+/VIEW,1,1,1,1   
+/ANG,1  
+/replot
+
+! ********** Write results to file
+/post1 
+set,last
+*get,ifcnv,active,,solu,cnvg
+*get,nset,active,,set,nset
+*if,ifcnv,eq,0,then
+     set,previous
+	 nset = nset - 1
+*endif
+
+! **********
+allsel
+*get,nmin,node,0,num,min
+!*get,nmax,node,0,num,max
+!nmax = nmin+1
+allsel
+nsel,s,loc,y,miny
+*get,nmax,node,0,num,min
+allsel
+
+
+
+
+*del,bending1
+*dim,bending1,TABLE,nset,12
+
+allsel
+
+
+*do,i,1,nset
+    set,,,,,,,i
+	csys,0
+    /com, active set %i% out of %nset%
+
+	! ********** Getting force information
+    ! Data collection, pilot node
+    *get,bending1(i,1),node,nmin,u,x						! Displacements
+    *get,bending1(i,2),node,nmin,u,y
+    *get,bending1(i,3),node,nmin,u,z
+    *get,bending1(i,4),node,nmin,rf,fx						! Reaction forces
+    *get,bending1(i,5),node,nmin,rf,fy
+    *get,bending1(i,6),node,nmin,rf,fz
+
+    *get,bending1(i,7),node,nmax,u,x						! Displacements
+    *get,bending1(i,8),node,nmax,u,y
+    *get,bending1(i,9),node,nmax,u,z
+    *get,bending1(i,10),node,nmax,rf,fx						! Reaction forces
+    *get,bending1(i,11),node,nmax,rf,fy
+    *get,bending1(i,12),node,nmax,rf,fz
+
+*enddo
+! ********** To create compression data matrix in CSV format
+*MWRITE,bending1(1,1),tensileTest,csv,,JIK,12,nset,1 
+(12f12.3) 
