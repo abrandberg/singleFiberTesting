@@ -15,11 +15,16 @@ straightLine = drawline; %[x y]
 title('Draw true centerline by CLICK-REPOSITION-CLICK until end (DOUBLE-CLICK ESC')
 roi = drawpolyline;
 
-freespanInPixels = sqrt(sum(sum(diff(straightLine.Position,1,1))).^2);
+freespanInPixels = sum(sqrt(sum(diff(straightLine.Position,1,1))).^2);
 
 mmPerPixel = referenceLength/freespanInPixels; %% mm per pixel
 
 realCenterline = roi.Position.*mmPerPixel;
+
+
+% assert(sqrt(sum(sum(diff(realCenterline,                   1,1))).^2) >= sqrt(sum(sum(diff(straightLine.Position.*mmPerPixel,1,1))).^2))
+% sum(sqrt(sum(diff(realCenterline,                   1,1)).^2));
+% sqrt(sum(sum(diff(straightLine.Position.*mmPerPixel,1,1)).^2));
 
 realCenterline = realCenterline - realCenterline(1,:);
 
